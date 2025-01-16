@@ -42,4 +42,3 @@ next-env.d.ts
 
 # upload file path
 uploads/
-node_modules/
