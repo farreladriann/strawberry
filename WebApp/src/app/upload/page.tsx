@@ -75,16 +75,18 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">Image Processing App</CardTitle>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-green-400 to-blue-500 p-6 rounded-t-lg">
+            <CardTitle className="text-center text-white text-3xl font-bold">
+              Strawberry Disease Detection
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
+          <CardContent className="p-6">
+            <div className="space-y-8">
               {/* Upload Section */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center space-y-4">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -94,47 +96,47 @@ export default function Home() {
                 />
                 <Button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
                 >
                   <Upload size={20} />
                   Upload Image
                 </Button>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="text-sm text-gray-600">
                   Supported formats: JPEG, JPG, PNG
                 </p>
               </div>
 
               {/* Image Preview Section */}
               {processedImage && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <p className="font-medium text-center">Original Image</p>
-                    <div className="border rounded-lg p-2 h-64 flex items-center justify-center">
-                      <Image
-                        src={processedImage.originalUrl}
-                        alt="Original"
-                        className="max-h-full max-w-full object-contain"
-                        width={256}
-                        height={256}
-                        style={{ width: 'auto', height: 'auto' }}
-                      />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <p className="font-medium text-center text-gray-700">Original Image</p>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-white">
+                      <div className="relative w-full h-64">
+                        <Image
+                          src={processedImage.originalUrl}
+                          alt="Original"
+                          className="object-contain"
+                          fill // Use fill to make the image responsive within the container
+                        />
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <p className="font-medium text-center">Processed Image</p>
-                    <div className="border rounded-lg p-2 h-64 flex items-center justify-center">
+                  <div className="space-y-4">
+                    <p className="font-medium text-center text-gray-700">Disease Detection Result</p>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-white">
                       {processedImage.processedUrl ? (
-                        <Image
-                          src={processedImage.processedUrl}
-                          alt="Processed"
-                          className="max-h-full max-w-full object-contain"
-                          width={256}
-                          height={256}
-                          style={{ width: 'auto', height: 'auto' }}
-                        />
+                        <div className="relative w-full h-64">
+                          <Image
+                            src={processedImage.processedUrl}
+                            alt="Processed"
+                            className="object-contain"
+                            fill // Use fill to make the image responsive within the container
+                          />
+                        </div>
                       ) : (
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center h-64">
                           <ImageIcon className="text-gray-400" size={48} />
                         </div>
                       )}
@@ -149,7 +151,7 @@ export default function Home() {
                   <Button
                     onClick={processImage}
                     disabled={isProcessing}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
                   >
                     {isProcessing ? 'Processing...' : 'Process Image'}
                   </Button>
@@ -157,7 +159,7 @@ export default function Home() {
                   {processedImage?.processedUrl && (
                     <Button
                       onClick={downloadImage}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
                     >
                       <Download size={20} />
                       Download

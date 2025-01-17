@@ -60,7 +60,7 @@ def predict_disease(image_path):
             im_array = result.plot()
             
             # Save the output image back to the same file
-            cv2.imwrite(image_path, im_array)
+            cv2.imwrite(image_path, im_array)  # Ensure no resizing happens here
             
             # Collect predictions
             for box in boxes:
@@ -166,12 +166,26 @@ export default async function handler(
 
     // Process the image using Sharp first
     const processedImagePath = path.join(uploadsDir, `processed-${file.originalFilename}`);
+    
+    // Debug: Log original image dimensions
+    const originalImageMetadata = await sharp(file.filepath).metadata();
+    console.log('Original Image Dimensions:', originalImageMetadata.width, 'x', originalImageMetadata.height);
+
+    // Ensure no resizing happens during Sharp processing
     await sharp(file.filepath)
       .sharpen()
       .toFile(processedImagePath);
 
-    // // Run disease prediction on the processed image - it will update the same image
+    // Debug: Log processed image dimensions
+    const processedImageMetadata = await sharp(processedImagePath).metadata();
+    console.log('Processed Image Dimensions:', processedImageMetadata.width, 'x', processedImageMetadata.height);
+
+    // Run disease prediction on the processed image
     const predictions = await runPythonPrediction(processedImagePath);
+
+    // Debug: Log final image dimensions after Python processing
+    const finalImageMetadata = await sharp(processedImagePath).metadata();
+    console.log('Final Image Dimensions:', finalImageMetadata.width, 'x', finalImageMetadata.height);
 
     // Return the results
     const processedImageUrl = `/uploads/processed-${file.originalFilename}`;
