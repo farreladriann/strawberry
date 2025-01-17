@@ -17,7 +17,7 @@ interface PredictionResult {
 }
 
 async function runPythonPrediction(imagePath: string): Promise<PredictionResult[]> {
-  const modelPath = path.join(process.cwd(), 'models', 'best_model.pt');
+  const modelPath = path.join(process.cwd(), 'models', 'best_strawberry_disease_model.pt');
 
   if (!fs.existsSync(modelPath)) {
     throw new Error(`Model file not found at ${modelPath}`);
