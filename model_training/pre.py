@@ -27,7 +27,6 @@ def predict_disease():
             # Filter boxes by confidence
             filtered_boxes = [box for box in boxes if box.conf[0] >= confidence_threshold]
             
-            # Get image with boxes drawn
             im_array = result.plot()
             
             # Save the output image
