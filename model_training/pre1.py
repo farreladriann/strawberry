@@ -1,9 +1,10 @@
 from ultralytics import YOLO
 import cv2
+import os
 
 def predict_disease(image_path, result_image_path):
     # Load the trained model
-    model = YOLO('best_model.pt')
+    model = YOLO('strawberry_tuned.pt')
     
     # Confidence threshold
     confidence_threshold = 0.5
@@ -33,8 +34,10 @@ def predict_disease(image_path, result_image_path):
 
 if __name__ == "__main__":
     # Path to the input image and output result image
-    input_image_path = "./test/img/image1.png"  # Ganti dengan path gambar Anda
-    output_image_path = "./test/result1/image1.png"  # Ganti dengan path output yang diinginkan
+    input_image_path = "./stest/Mozaic Virus/Mycosphaerella-fragariae-1024x600.jpg"  # Ganti dengan path gambar Anda
+    input_image_ext = os.path.splitext(input_image_path)[1]
+    input_file_base = os.path.basename(input_image_path)
+    output_image_path = f"./{input_file_base}_detect{input_image_ext}"  # Ganti dengan path penyimpanan hasil
     
     # Predict disease on the single image
     predict_disease(input_image_path, output_image_path)
