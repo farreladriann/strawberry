@@ -1,20 +1,13 @@
-# This is my roboflow dataset for object detection
-
-# there are 3 clasess to detect
-# 1. strawberry leaf (5,614 annotation)
-# 2. strawberry fruit (6580 annotation)
-# 3. strawberry flower (370 annotation)
-
-# All the image already annotate.
-
-# I want to train this roboflow dataset with yolo11x model, but I still confuse to configurate the hyperparameter of the training using ultralytics YOLO.
-
-# GPU: NVIDIA GeForce RTX 3060
-# VRAM: 12.62 GB
-
+from roboflow import Roboflow
 import torch
 from ultralytics import YOLO
 import os
+
+# Setup Roboflow dataset
+rf = Roboflow(api_key="pZl3oXtPnrV76f4g5qtS")
+project = rf.workspace("farrelganteng").project("strawberry-skcti-ew21i")
+version = project.version(2)
+dataset = version.download("yolov11")
 
 def setup_training_environment():
     if not torch.cuda.is_available():
@@ -25,66 +18,61 @@ def setup_training_environment():
 def train_strawberry_leaves_model():
     setup_training_environment()
 
-    # Optimized training configuration for Strawberry-Leaves2 dataset
+    # Konfigurasi hyperparameter (disarankan sebagai starting point)
     config = {
-        'data': '/data/strawberry-2/data.yaml',
-        'epochs': 150,
+        'data': '/data/strawberry-2/data.yaml',  # Pastikan path data.yaml sudah benar
+        'epochs': 200,              # Tambah epoch untuk pelatihan yang lebih mendalam
         'imgsz': 640,
-        'batch': 32,
+        'batch': 16,                # Batch size disesuaikan dengan kapasitas VRAM
         'device': 0,
-        'optimizer': 'SGD',
-        'lr0': 1e-3,
+        'optimizer': 'AdamW',       # Optimizer yang sering memberikan kestabilan saat fine-tuning
+        'lr0': 5e-4,                # Learning rate awal yang lebih rendah untuk fine-tuning
         'lrf': 0.1,
         'weight_decay': 0.0005,
-        'momentum': 0.9,
-        'patience': 30,
-        'cache': False,
+        'momentum': 0.937,          # Momentum yang umum dipakai (meski lebih relevan untuk SGD)
+        'patience': 50,             # Kesabaran (patience) yang lebih tinggi untuk menghindari early stopping terlalu dini
+        'cache': True,              # Aktifkan caching untuk mempercepat akses data
         'pretrained': True,
-        'project': 'strawberry_tuned',
-        'name': 'strawberry_tuned',
-        'degrees': 15.0,
-        'translate': 0.2,
-        'scale': 0.3,
-        'shear': 3.0,
-        'perspective': 0.0001,
-        'flipud': 0.3,
-        'fliplr': 0.3,
+        'project': 'strawberry_tuned_best',
+        'name': 'strawberry_tuned_best',
+        # Augmentasi Geometris:
+        'degrees': 10.0,            # Rotasi yang lebih kecil untuk menjaga kealamian objek
+        'translate': 0.1,           # Translasi yang dikurangi
+        'scale': 0.5,               # Variasi skala lebih besar agar model lebih robust terhadap perubahan ukuran
+        'shear': 2.0,               # Pengurangan intensitas shear
+        'perspective': 0.0001,      # Augmentasi perspektif minimal
+        'flipud': 0.0,              # Tidak membalik vertikal (karena objek tidak mungkin terbalik secara natural)
+        'fliplr': 0.5,              # Pembalikan horizontal dengan probabilitas lebih tinggi
         'workers': 8,
         'plots': True,
-        'hsv_h': 0.015,
-        'hsv_s': 0.3,
-        'hsv_v': 0.2,
-        'save_period': 30,
+        # Augmentasi Warna (HSV):
+        'hsv_h': 0.2,             # Intensitas perubahan hue yang ringan
+        'hsv_s': 0.7,
+        'hsv_v': 0.4,
+        'save_period': 10,          # Simpan model secara berkala untuk monitoring
     }
 
-    model = YOLO('yolo11m.pt')  # Use YOLOv8n for faster training with limited data
+    # Pastikan kamu menggunakan model yang sesuai (misalnya yolo11m.pt atau yolo11x.pt)
+    model = YOLO('yolo11m.pt')
     print("\n=== Mulai Training Model ===")
     results = model.train(**config)
-
-    # Save the trained model
-    model.save('strawberry_tuned.pt')
+    
+    # Simpan model terlatih
+    model.save('strawberry_tuned_best.pt')
 
 def validate_model():
-    # Load the trained modelso what is the best configuration
-    model = YOLO('strawberry_tuned.pt')
+    model = YOLO('strawberry_tuned_best.pt')
     print("\n=== Mulai Validasi Model ===")
-
-    # Perform validation on the test split
     metrics = model.val(data='/data/strawberry-2/data.yaml', split='test')
-
-    # Display validation metrics
     print(f"Validasi: mAP50-95: {metrics.box.map:.2f} | mAP50: {metrics.box.map50:.2f}")
 
 if __name__ == "__main__":
     try:
-        # Display GPU information
         print(f"GPU: {torch.cuda.get_device_name(0)}")
         total_vram = torch.cuda.get_device_properties(0).total_memory / 1e9
         print(f"VRAM: {total_vram:.2f} GB")
-
-        # Run training and validation
+        
         train_strawberry_leaves_model()
         validate_model()
-
     except Exception as e:
         print(f"Error: {str(e)}")
