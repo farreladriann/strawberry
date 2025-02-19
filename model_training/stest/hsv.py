@@ -3,7 +3,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-def augment_hsv(image, h_gain=0.015, s_gain=0.7, v_gain=0.4):
+def augment_hsv(image, h_gain=0.2, s_gain=0.7, v_gain=0.4):
     """
     Menerapkan augmentasi HSV pada gambar.
 
@@ -42,7 +42,7 @@ def augment_hsv(image, h_gain=0.015, s_gain=0.7, v_gain=0.4):
 
 if __name__ == '__main__':
     # Input path gambar
-    img_path = input("Masukkan path gambar (misal: gambar.jpg): ")
+    img_path = "Leaf Spot/20250112_074254.jpg"
     image = cv2.imread(img_path)
     if image is None:
         print("Gambar tidak ditemukan, periksa path yang diberikan.")
@@ -55,12 +55,11 @@ if __name__ == '__main__':
         print("Masukkan angka yang valid.")
         exit(1)
     
-    # Menentukan layout grid (misal: 3 gambar per baris)
-    cols = 3
+    cols = 5
     rows = (num_aug + cols - 1) // cols  # menghitung jumlah baris yang diperlukan
     
     fig, axes = plt.subplots(rows, cols, figsize=(5 * cols, 5 * rows))
-    # Jika hanya 1 baris atau 1 gambar, pastikan axes berupa list
+    # Pastikan axes berupa list (flatten) jika lebih dari 1 subplot
     if num_aug == 1:
         axes = [axes]
     else:
@@ -72,12 +71,11 @@ if __name__ == '__main__':
         aug_img_rgb = cv2.cvtColor(aug_img, cv2.COLOR_BGR2RGB)
         axes[i].imshow(aug_img_rgb)
         axes[i].axis('off')
-        axes[i].set_title(f"Augmentasi {i+1}", fontsize=12)
-        # Menampilkan nilai parameter HSV di bawah gambar
-        hsv_text = f"Hue: {delta_h:.2f}\nSat: {factor_s:.2f}\nVal: {factor_v:.2f}"
-        axes[i].set_xlabel(hsv_text, fontsize=10)
+        # Ganti judul (title) dengan nilai HSV
+        title = f"Hue: {delta_h:.2f}, Sat: {factor_s:.2f}, Val: {factor_v:.2f}"
+        axes[i].set_title(title, fontsize=12)
     
-    # Jika ada subplot yang tidak terpakai, sembunyikan
+    # Sembunyikan subplot yang tidak terpakai
     for j in range(num_aug, len(axes)):
         axes[j].axis('off')
     
