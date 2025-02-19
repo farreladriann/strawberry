@@ -97,15 +97,17 @@ def predict_disease(image_path, detection_method, part_model_path, disease_model
                     results2 = disease_model(crop_img)
                     secondary_detections = []
                     
+                    has_detections = False
+                    annotated_crop = None
+                    
                     for res2 in results2:
                         boxes2 = res2.boxes
                         filtered_boxes2 = [b for b in boxes2 if float(b.conf[0]) >= conf_thresh]
                         
                         if filtered_boxes2:
-                            # ↓ Ubah font_size dan line_width di sini ↓
+                            has_detections = True
+                            # Create annotated crop only if we have detections
                             annotated_crop = res2.plot(font_size=10, line_width=4)
-                            annotated_crop_resized = cv2.resize(annotated_crop, (x2 - x1, y2 - y1))
-                            original_image[y1:y2, x1:x2] = annotated_crop_resized
                             
                             for b in filtered_boxes2:
                                 disease_name = disease_model.names[int(b.cls[0])]
@@ -114,6 +116,14 @@ def predict_disease(image_path, detection_method, part_model_path, disease_model
                                     "disease": disease_name,
                                     "confidence": confidence
                                 })
+                    
+                    # If no disease detected, use original crop for visualization
+                    if not has_detections:
+                        annotated_crop = crop_img
+                    
+                    # Always resize the annotated crop (or original if no detections)
+                    annotated_crop_resized = cv2.resize(annotated_crop, (x2 - x1, y2 - y1))
+                    original_image[y1:y2, x1:x2] = annotated_crop_resized
                     
                     crop_index += 1
                     crop_filename = f"crop_{crop_index}.jpg"
