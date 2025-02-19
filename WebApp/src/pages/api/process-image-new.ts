@@ -103,7 +103,7 @@ def predict_disease(image_path, detection_method, part_model_path, disease_model
                         
                         if filtered_boxes2:
                             # ↓ Ubah font_size dan line_width di sini ↓
-                            annotated_crop = res2.plot(font_size=4, line_width=2)
+                            annotated_crop = res2.plot(font_size=10, line_width=4)
                             annotated_crop_resized = cv2.resize(annotated_crop, (x2 - x1, y2 - y1))
                             original_image[y1:y2, x1:x2] = annotated_crop_resized
                             
@@ -136,7 +136,7 @@ def predict_disease(image_path, detection_method, part_model_path, disease_model
             results = disease_model(original_image)
             
             # ↓ Ubah font_size dan line_width di sini ↓
-            annotated_full = results[0].plot(font_size=4, line_width=2)
+            annotated_full = results[0].plot(font_size=12, line_width=10)
             original_image = annotated_full
             
             # Kumpulkan data bounding box tanpa menyimpan crop
