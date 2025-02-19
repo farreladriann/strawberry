@@ -4,10 +4,10 @@ import os
 
 def predict_disease(image_path, result_image_path):
     # Load the trained model
-    model = YOLO('strawberry_tuned.pt')
+    model = YOLO('strawberry_tuned_best.pt')
     
     # Confidence threshold
-    confidence_threshold = 0.5
+    confidence_threshold = 0.1
     
     # Run inference
     results = model(image_path)
@@ -34,10 +34,13 @@ def predict_disease(image_path, result_image_path):
 
 if __name__ == "__main__":
     # Path to the input image and output result image
-    input_image_path = "./stest/Mozaic Virus/Mycosphaerella-fragariae-1024x600.jpg"  # Ganti dengan path gambar Anda
-    input_image_ext = os.path.splitext(input_image_path)[1]
-    input_file_base = os.path.basename(input_image_path)
-    output_image_path = f"./{input_file_base}_detect{input_image_ext}"  # Ganti dengan path penyimpanan hasil
-    
-    # Predict disease on the single image
-    predict_disease(input_image_path, output_image_path)
+    for folder in [d for d in os.listdir("./stest") if os.path.isdir(os.path.join("./stest", d))]:
+        for file in os.listdir(f"./stest/{folder}"):
+            input_image_path = f"./stest/{folder}/{file}"
+            input_image_ext = os.path.splitext(input_image_path)[1]
+            input_file_base = os.path.basename(input_image_path)
+            if not os.path.exists(f"./stest/{folder}part"):
+                os.makedirs(f"./stest/{folder}part")
+            output_image_path = f"./stest/{folder}part/{input_file_base}_detect{input_image_ext}"
+
+            predict_disease(input_image_path, output_image_path)
