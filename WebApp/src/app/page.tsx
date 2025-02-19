@@ -140,11 +140,6 @@ export default function Home() {
     return { primary, secondary };
   };
 
-  const handleDetectionMethodChange = (value: string) => {
-    setDetectionMethod(value as "part-first" | "direct");
-    setPredictions([]);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -161,7 +156,7 @@ export default function Home() {
                 <h3 className="text-lg font-medium">Detection Method</h3>
                 <RadioGroup 
                   value={detectionMethod} 
-                  onValueChange={handleDetectionMethodChange}
+                  onValueChange={(value) => setDetectionMethod(value as "part-first" | "direct")}
                   className="space-y-2"
                 >
                   <div className="flex items-center space-x-2">
@@ -297,33 +292,31 @@ export default function Home() {
               )}
 
               {/* Detected Crops Section */}
-              {detectionMethod === "part-first" && predictions.length > 0 && predictions[0].crop_url && (
+              {detectionMethod === "part-first" && predictions.length > 0 && (
                 <div className="space-y-4">
                   <p className="font-medium text-center text-gray-700">
                     Detected Crops
                   </p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {predictions.map((pred, index) => {
+                    {predictions.filter(pred => pred.crop_url).map((pred, index) => {
                       const labels = getCropLabels(pred);
                       return (
-                        pred.crop_url ? (
-                          <div key={index} className="border rounded-lg p-2 bg-white">
-                            <div className="relative w-full h-40">
-                              <Image
-                                src={pred.crop_url + `?t=${Date.now()}`}
-                                alt={`Crop ${index + 1}`}
-                                className="object-contain"
-                                fill
-                              />
-                            </div>
-                            <p className="mt-2 text-center text-sm font-medium text-gray-700">
-                              {labels.primary}
-                            </p>
-                            <p className="text-center text-xs text-gray-600">
-                              {labels.secondary}
-                            </p>
+                        <div key={index} className="border rounded-lg p-2 bg-white">
+                          <div className="relative w-full h-40">
+                            <Image
+                              src={pred.crop_url + `?t=${Date.now()}`}
+                              alt={`Crop ${index + 1}`}
+                              className="object-contain"
+                              fill
+                            />
                           </div>
-                        ) : null
+                          <p className="mt-2 text-center text-sm font-medium text-gray-700">
+                            {labels.primary}
+                          </p>
+                          <p className="text-center text-xs text-gray-600">
+                            {labels.secondary}
+                          </p>
+                        </div>
                       );
                     })}
                   </div>
