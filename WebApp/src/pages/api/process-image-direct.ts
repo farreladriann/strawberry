@@ -152,7 +152,7 @@ export default async function handler(
     }
 
     const form = formidable({});
-    const [fields, files]: [Fields, Files] = await new Promise((resolve, reject) => {
+    const [, files]: [Fields, Files] = await new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
         if (err) reject(err);
         resolve([fields, files]);

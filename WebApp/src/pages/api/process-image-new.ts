@@ -35,7 +35,6 @@ async function runPythonPrediction(
   const modelPaths = {
     strawberry_tuned: path.join(process.cwd(), "models", "strawberry_tuned.pt"),
     strawberry_part_detection: path.join(process.cwd(), "models", "strawberry_part_detection.pt"),
-    best_model: path.join(process.cwd(), "models", "best_model.pt"),
     leafblight: path.join(process.cwd(), "models", "leafblight.pt"),
     best_strawberry_disease_model: path.join(process.cwd(), "models", "best_strawberry_disease_model.pt"),
   };
@@ -146,7 +145,7 @@ def predict_disease(image_path, detection_method, part_model_path, disease_model
             results = disease_model(original_image)
             
             # ↓ Ubah font_size dan line_width di sini ↓
-            annotated_full = results[0].plot(font_size=12, line_width=10)
+            annotated_full = results[0].plot(font_size=10, line_width=4)
             original_image = annotated_full
             
             # Kumpulkan data bounding box tanpa menyimpan crop

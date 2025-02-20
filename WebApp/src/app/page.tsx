@@ -36,14 +36,13 @@ interface ProcessedImage {
 }
 
 const PART_DETECTION_MODELS = [
-  { id: "strawberry_tuned", name: "Strawberry Tuned" },
+  { id: "strawberry_tuned", name: "Strawberry Part Detection v2" },
   { id: "strawberry_part_detection", name: "Strawberry Part Detection" },
 ];
 
 const DISEASE_DETECTION_MODELS = [
-  { id: "best_model", name: "Best Model" },
-  { id: "leafblight", name: "Leaf Blight Detector" },
-  { id: "best_strawberry_disease_model", name: "Best Strawberry Disease" },
+  { id: "leafblight", name: "7 Diseases + Leaf Blight Detection" },
+  { id: "best_strawberry_disease_model", name: "Best 7 Diseases Detection" },
 ];
 
 export default function Home() {
@@ -228,11 +227,10 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Rest of the existing JSX remains the same */}
               {/* Image Preview Section */}
               {processedImage && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Original Image */}
+                  {/* Original Image */}
                   <div className="space-y-4">
                     <p className="font-medium text-center text-gray-700">
                       Original Image
@@ -272,20 +270,20 @@ export default function Home() {
                     
                     {/* Tampilkan seluruh secondary detection untuk keseluruhan gambar */}
                     {processedImage?.processedUrl && (
-                    <div className="mt-4">
-                      <h3 className="text-center text-xl font-bold text-gray-700">
-                        Diseases
-                      </h3>
-                      {predictions.length === 0 ? (
-                        <p className="mt-2 text-center text-gray-700">
-                          There are no diseases
-                        </p>
-                      ) : (
-                        <p className="mt-2 text-center text-gray-700">
-                          {getAllSecondaryLabels()}
-                        </p>
-                      )}
-                    </div>
+                      <div className="mt-4">
+                        <h3 className="text-center text-xl font-bold text-gray-700">
+                          Diseases
+                        </h3>
+                        {predictions.length === 0 ? (
+                          <p className="mt-2 text-center text-gray-700">
+                            There are no diseases
+                          </p>
+                        ) : (
+                          <p className="mt-2 text-center text-gray-700">
+                            {getAllSecondaryLabels()}
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -322,6 +320,21 @@ export default function Home() {
                   </div>
                 </div>
               )}
+
+              {/* Disease Names Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-gray-700">7 Diseases + Leaf Blight</h3>
+                <ol className="list-decimal list-inside text-gray-700">
+                  <li>Angular Leafspot</li>
+                  <li>Leaf Spot</li>
+                  <li>Powdery Mildew Fruit</li>
+                  <li>Powdery Mildew Leaf</li>
+                  <li>Gray Mold</li>
+                  <li>Blossom Blight</li>
+                  <li>Anthracnose Fruit Rot</li>
+                  <li>Leaf Blight</li>
+                </ol>
+              </div>
 
               {/* Action Buttons */}
               {selectedImage && (
