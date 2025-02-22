@@ -13,6 +13,7 @@ git clone https://github.com/yourusername/strawberry.git
 cd strawberry
 git lfs pull
 
-```bash
+```
+```
 pip install -r requirements.txt
 ```
