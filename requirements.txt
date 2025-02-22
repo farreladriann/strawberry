@@ -1,0 +1,24 @@
+# Deep Learning Framework
+torch
+ultralytics
+
+# Image Processing
+opencv-python
+Pillow
+scikit-image
+scipy
+numpy
+
+# Data Processing and Analysis
+pandas
+PyYAML
+matplotlib
+
+# Image Hashing (for duplicate detection)
+imagehash
+
+# Utilities
+tqdm
+
+# Dataset Management
+roboflow
